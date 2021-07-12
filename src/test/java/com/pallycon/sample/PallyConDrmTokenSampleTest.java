@@ -178,7 +178,7 @@ public class PallyConDrmTokenSampleTest {
         } catch (Exception e) {
             this.licenseTokenForFairplay = "unexpected Exception || " + e.getMessage();
         }
-        logger.debug("result_licenseTokenForWidevine: {}", licenseTokenForFairplay);
+        logger.debug("result_licenseTokenForFairplay: {}", licenseTokenForFairplay);
     }
 
 }

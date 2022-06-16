@@ -1,20 +1,21 @@
 package com.pallycon.sample;
 
-import com.pallycon.sample.exception.PallyConTokenException;
-import com.pallycon.sample.token.PallyConDrmTokenClient;
-import com.pallycon.sample.token.PallyConDrmTokenPolicy;
-import com.pallycon.sample.token.policy.*;
 import com.pallycon.sample.token.policy.common.TrackType;
 import com.pallycon.sample.token.policy.playbackPolicy.AllowedTrackTypes;
 import com.pallycon.sample.token.policy.securityPolicy.fairplay.FairplayHdcpEnforcement;
-import com.pallycon.sample.token.policy.securityPolicy.playready.AnalogVideoProtection;
+import com.pallycon.sample.token.policy.securityPolicy.ncg.NcgControlHdcp;
 import com.pallycon.sample.token.policy.securityPolicy.playready.DigitalAudioProtection;
+import com.pallycon.sample.exception.PallyConTokenException;
+import com.pallycon.sample.token.policy.securityPolicy.playready.AnalogVideoProtection;
 import com.pallycon.sample.token.policy.securityPolicy.playready.DigitalVideoProtection;
 import com.pallycon.sample.token.policy.securityPolicy.playready.PlayreadySecurityLevel;
 import com.pallycon.sample.token.policy.securityPolicy.widevine.RequiredCgmsFlags;
 import com.pallycon.sample.token.policy.securityPolicy.widevine.RequiredHdcpVersion;
 import com.pallycon.sample.token.policy.securityPolicy.widevine.WidevineSecurityLevel;
-//import com.pallycon.sample.v2.PolicyTest;
+import com.pallycon.sample.token.PallyConDrmTokenClient;
+import com.pallycon.sample.token.PallyConDrmTokenPolicy;
+import com.pallycon.sample.token.policy.*;
+import com.pallycon.sample.v2.PolicyTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -25,16 +26,18 @@ import org.slf4j.LoggerFactory;
  */
 public class PallyConDrmTokenSampleTest {
 
-    private static Logger logger = LoggerFactory.getLogger(PallyConDrmTokenSampleTest.class);
+    private static Logger logger = LoggerFactory.getLogger(PolicyTest.class);
 
     private String licenseTokenForPlayready = "";
     private String licenseTokenForWidevine = "";
     private String licenseTokenForFairplay = "";
+    private String licenseTokenForNCG = "";
 
     private PallyConDrmTokenPolicy policy = null;
     private PallyConDrmTokenClient tokenForPlayready = null;
     private PallyConDrmTokenClient tokenForWidevine = null;
     private PallyConDrmTokenClient tokenForFairplay = null;
+    private PallyConDrmTokenClient tokenForNCG = null;
 
     private PlaybackPolicy playbackPolicy = new PlaybackPolicy();
     private SecurityPolicy securityPolicyForAll = new SecurityPolicy();
@@ -76,6 +79,12 @@ public class PallyConDrmTokenSampleTest {
                 .digitalVideoProtection(DigitalVideoProtection.LEVEL_100)
                 .digitalAudioProtection(DigitalAudioProtection.LEVEL_100);
 
+        SecurityPolicyNcg ncgForAll = new SecurityPolicyNcg()
+                .allowMobileAbnormalDevice(true)
+                .allowExternalDisplay(true)
+                .controlHdcp(NcgControlHdcp.HDCP_NONE);
+
+
         this.playbackPolicy
                 .allowedTrackTypes(AllowedTrackTypes.SD_HD)
                 .persistent(false);
@@ -83,6 +92,7 @@ public class PallyConDrmTokenSampleTest {
                 .widevine(widevineForAll)
                 .fairplay(fairplayForAll)
                 .playready(playreadyForAll)
+                .ncg(ncgForAll)
                 .trackType(TrackType.ALL);
     }
 
@@ -178,7 +188,38 @@ public class PallyConDrmTokenSampleTest {
         } catch (Exception e) {
             this.licenseTokenForFairplay = "unexpected Exception || " + e.getMessage();
         }
-        logger.debug("result_licenseTokenForFairplay: {}", licenseTokenForFairplay);
+        logger.debug("result_licenseTokenForFairPlay: {}", licenseTokenForFairplay);
     }
 
+
+
+
+    /**
+     * 3. create token for NCG
+     * */
+    @Test
+    public void makeTokenForNCG() {
+        try {
+            // build policy.
+            buildPolicy();
+
+            this.tokenForNCG = new PallyConDrmTokenClient()
+                    .ncg()
+                    .siteKey("<Site Key>") // substitute if want
+                    .accessKey("<Access Key>") // substitute if want
+                    .siteId("<Site ID>") // substitute if want
+                    .userId("<tester-user>") // substitute if want
+                    .cId("<Content ID>") // substitute if want
+                    .policy(policy);
+
+            // generate token.
+            this.licenseTokenForNCG = this.tokenForNCG.execute();
+            logger.debug("tokenForNCG JSON : {}", this.tokenForNCG.toJsonString());
+        } catch (PallyConTokenException e) {
+            licenseTokenForNCG = e.getMessage();
+        } catch (Exception e) {
+            this.licenseTokenForNCG = "unexpected Exception || " + e.getMessage();
+        }
+        logger.debug("result_licenseTokenForNCG: {}", licenseTokenForNCG);
+    }
 }

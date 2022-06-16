@@ -2,16 +2,16 @@ package com.pallycon.sample.v2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pallycon.sample.exception.PallyConTokenException;
-import com.pallycon.sample.token.PallyConDrmTokenPolicy;
-import com.pallycon.sample.token.policy.*;
-import com.pallycon.sample.token.policy.common.TrackType;
 import com.pallycon.sample.token.policy.playbackPolicy.AllowedTrackTypes;
 import com.pallycon.sample.token.policy.securityPolicy.fairplay.FairplayHdcpEnforcement;
 import com.pallycon.sample.token.policy.securityPolicy.playready.DigitalVideoProtection;
 import com.pallycon.sample.token.policy.securityPolicy.playready.PlayreadySecurityLevel;
 import com.pallycon.sample.token.policy.securityPolicy.widevine.RequiredHdcpVersion;
 import com.pallycon.sample.token.policy.securityPolicy.widevine.WidevineSecurityLevel;
+import com.pallycon.sample.exception.PallyConTokenException;
+import com.pallycon.sample.token.policy.common.TrackType;
+import com.pallycon.sample.token.PallyConDrmTokenPolicy;
+import com.pallycon.sample.token.policy.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class PolicyTest {
                     "\"widevine\":{" +
                     "\"security_level\":1," +
                     "\"required_hdcp_version\":\"HDCP_NONE\"," +
-                    "\"override_device_revocation\":true"+
+                    "\"override_device_revocation\":false"+
                     "}," +
                     "\"playready\":{" +
                     "\"security_level\":150," +

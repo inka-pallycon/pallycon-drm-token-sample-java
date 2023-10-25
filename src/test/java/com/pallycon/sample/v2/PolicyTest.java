@@ -29,7 +29,8 @@ public class PolicyTest {
         PlaybackPolicy playbackPolicy = new PlaybackPolicy()
                 .persistent(false)
                 .licenseDuration(60)
-                .allowedTrackTypes(AllowedTrackTypes.ALL);
+                .allowedTrackTypes(AllowedTrackTypes.ALL)
+                .maxStreamPerUser(5);
         SecurityPolicy securityPolicy = new SecurityPolicy()
                 .trackType(TrackType.ALL)
                 .widevine(new SecurityPolicyWidevine()
@@ -48,7 +49,8 @@ public class PolicyTest {
                     "\"widevine\":{" +
                     "\"security_level\":1," +
                     "\"required_hdcp_version\":\"HDCP_NONE\"," +
-                    "\"override_device_revocation\":false"+
+                    "\"override_device_revocation\":false," +
+                    "\"enable_license_cipher\":false" +
                     "}," +
                     "\"playready\":{" +
                     "\"security_level\":150," +
@@ -63,7 +65,8 @@ public class PolicyTest {
                     "\"policy_version\":2," +
                     "\"playback_policy\":{" +
                         "\"persistent\":false,\"license_duration\":60," +
-                        "\"allowed_track_types\":\"ALL\"" +
+                        "\"allowed_track_types\":\"ALL\"," +
+                        "\"max_stream_per_user\":5" +
                     "}," +
                     "\"security_policy\":[" +
                         securityStr +
@@ -143,12 +146,15 @@ public class PolicyTest {
                     Arrays.asList(
                         new ExternalKeyPolicyHlsAes(TrackType.SD,
                                 "5eee5eee5eee5eee5eee5eee5eee5eee",
+                                "5eee5eee5eee5eee5eee5eee5eee5eee",
                                 "5eee5eee5eee5eee5eee5eee5eee5eee"),
                         new ExternalKeyPolicyHlsAes(TrackType.HD,
                                 "c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+                                "5eee5eee5eee5eee5eee5eee5eee5eee",
                                 "5eee5eee5eee5eee5eee5eee5eee5eee"),
                         new ExternalKeyPolicyHlsAes(TrackType.UHD1,
                                 "5eee5eee5eee5eee5eee5eee5eee5eee",
+                                "2a2a2b2b2a2a2b2b2a2a2b2b2a2a2b2b",
                                 "2a2a2b2b2a2a2b2b2a2a2b2b2a2a2b2b")
                     )
                 );
@@ -156,11 +162,11 @@ public class PolicyTest {
         String hlsStr = "" +
             "{\"hls_aes\":[" +
                 "{\"track_type\":\"SD\",\"key\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"," +
-                    "\"iv\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"}," +
+                    "\"iv\":\"5eee5eee5eee5eee5eee5eee5eee5eee\",\"key_id\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"}," +
                 "{\"track_type\":\"HD\",\"key\":\"c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3\"," +
-                    "\"iv\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"}," +
+                    "\"iv\":\"5eee5eee5eee5eee5eee5eee5eee5eee\",\"key_id\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"}," +
                 "{\"track_type\":\"UHD1\",\"key\":\"5eee5eee5eee5eee5eee5eee5eee5eee\"," +
-                    "\"iv\":\"2a2a2b2b2a2a2b2b2a2a2b2b2a2a2b2b\"}" +
+                    "\"iv\":\"2a2a2b2b2a2a2b2b2a2a2b2b2a2a2b2b\",\"key_id\":\"2a2a2b2b2a2a2b2b2a2a2b2b2a2a2b2b\"}" +
             "]}";
 
         ObjectMapper objectMapper = new ObjectMapper();

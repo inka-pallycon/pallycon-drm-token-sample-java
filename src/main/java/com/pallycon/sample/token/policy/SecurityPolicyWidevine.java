@@ -32,7 +32,6 @@ public class SecurityPolicyWidevine {
     private String hdcpSrmRule;
     @JsonProperty("override_device_revocation")
     private Boolean overrideDeviceRevocation = false;
-
     @JsonProperty("enable_license_cipher")
     private Boolean enableLicenseCipher = false;
 

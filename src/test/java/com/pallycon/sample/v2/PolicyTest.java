@@ -29,8 +29,7 @@ public class PolicyTest {
         PlaybackPolicy playbackPolicy = new PlaybackPolicy()
                 .persistent(false)
                 .licenseDuration(60)
-                .allowedTrackTypes(AllowedTrackTypes.ALL)
-                .maxStreamPerUser(5);
+                .allowedTrackTypes(AllowedTrackTypes.ALL);
         SecurityPolicy securityPolicy = new SecurityPolicy()
                 .trackType(TrackType.ALL)
                 .widevine(new SecurityPolicyWidevine()
@@ -66,7 +65,6 @@ public class PolicyTest {
                     "\"playback_policy\":{" +
                         "\"persistent\":false,\"license_duration\":60," +
                         "\"allowed_track_types\":\"ALL\"," +
-                        "\"max_stream_per_user\":5" +
                     "}," +
                     "\"security_policy\":[" +
                         securityStr +
